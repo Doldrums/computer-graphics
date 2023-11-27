@@ -5,6 +5,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project("Computer graphics in Game development")
 
+if(APPLE)
+  set(CMAKE_CXX_COMPILER "/opt/homebrew/Cellar/llvm/17.0.5/bin/clang++")
+  set(CMAKE_C_COMPILER "/opt/homebrew/Cellar/llvm/17.0.5/bin/clang")
+  set(CXX_STANDARD_LIBRARIES "/opt/homebrew/Cellar/llvm/17.0.5/include")
+  set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES, "/opt/homebrew/Cellar/llvm/17.0.5/include/c++/v1/")
+
+  set(OPENMP_LIBRARIES "/opt/homebrew/Cellar/llvm/17.0.5/lib")
+  set(OPENMP_INCLUDES "/opt/homebrew/Cellar/llvm/17.0.5/include")
+
+  set(OpenMP_C "${CMAKE_C_COMPILER}")
+  set(OpenMP_C_FLAGS "-fopenmp=libomp -Wno-unused-command-line-argument")
+  set(OpenMP_C_LIB_NAMES "libomp" "libgomp" "libiomp5")
+endif()
+
 set(INCLUDE
         libs/stb
         libs/tinyobjloader
@@ -33,7 +47,6 @@ find_package(OpenMP REQUIRED)
 add_executable(Raytracing src/main.cpp src/renderer/raytracer/raytracer_renderer.cpp ${SOURCE})
 target_compile_definitions(Raytracing PUBLIC RAYTRACING)
 target_include_directories(Raytracing PRIVATE ${INCLUDE})
-target_link_libraries(Raytracing PRIVATE OpenMP::OpenMP_CXX)
 set_property(TARGET Raytracing PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
 add_executable(DirectX12 WIN32 src/win_main.cpp src/renderer/dx12/dx12_renderer.cpp src/utils/window.cpp ${SOURCE})
